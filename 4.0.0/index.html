@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Fapiokan">
+  <meta name="description" content="迫真">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/913725588349517844/928988772278878238/v4.png">
+	<link rel="apple-touch-icon" sizes="500x500" href="https://media.discordapp.net/attachments/913725588349517844/928988772278878238/v4.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300&display=swap" rel="stylesheet">
+	<title>迫真動画視聴v4.0.0-beta</title>
+	<style>
+		.menu {
+			position:fixed;
+			right:14px;
+			top:14px;
+			height:40px;
+			width:56px;
+			display:inline-block;
+			box-sizing:border-box;
+			transition:all 200ms 0s ease;
+			z-index:1000;
+		}
+		.menu div {
+			position: absolute;
+			height:6px;
+			width:64px;
+			background-color:#000;
+			border-radius:4px;
+			display:inline-block;
+			box-sizing:border-box;
+		}
+		.menu div:nth-of-type(1) {
+			bottom:40px;
+		}
+		.menu div:nth-of-type(2) {
+			bottom:20px;
+		}
+		.menu div:nth-of-type(3) {
+			bottom:0;
+		}
+		#option {
+			position:fixed;
+			left:100%;
+			top:0;
+			width:100%;
+			height:100%;
+			background-color:#888;
+			transition:all 300ms 0s ease;
+			z-index:500;
+		}
+		.title {
+		  position: absolute;
+			font-size: 64px;
+			left:50%;
+			margin-right:-50%;
+			transform: translate(-50%);
+		  color: #eee;
+		  line-height: 1;
+		  text-shadow: 0.06rem 0 0.06rem #ea36af, -0.125rem 0 0.06rem #75fa69;
+		  letter-spacing: 0.125em;
+		  animation-duration: 0.01s;
+		  animation-name: textflicker;
+		  animation-iteration-count: infinite;
+		  animation-direction: alternate;
+		}
+		@keyframes textflicker {
+		  from {
+		    text-shadow: 1px 0 0 #ea36af, -2px 0 0 #75fa69;
+		  }
+		  to {
+		    text-shadow: 2px 0.5px 2px #ea36af, -1px -0.5px 2px #75fa69;
+		  }
+		}
+		.Texts {
+			position: absolute;
+			font-size: 32px;
+			left:50%;
+			margin-right:-50%;
+			transform: translate(-50%);
+		}
+		#url {
+		  position: absolute;
+		  font-size: 32px;
+		  top: 50px;
+		  left:50%;
+			margin-right:-50%;
+			transform: translate(-50%);
+		}
+		#result {
+		  position: absolute;
+		  width:100%;
+		  top:140px;
+		  left:0;
+		  padding-top:56.25%;
+		  box-shadow: 0 0 16px #000;
+		  border: solid;
+		}
+		#result iframe {
+		  position:absolute;
+		  top:0;
+		  left:0;
+		  width:100%;
+		  height:100%;
+		}
+		.history {
+		  position:absolute;
+		  width:100%;
+		  height: 50%;
+		  top: 740px;
+		  left: 0;
+		}
+		.history div {
+		  position:absolute;
+		  width: 50%;
+		  height: 100%;
+		  border: solid;
+		}
+		.history div a {
+		  position:absolute;
+		  width:100%;
+		  font-size: 48px;
+		  font-family: 'Noto Serif JP', serif;
+		  background-color: #9e8b8e;
+		  text-align: center;
+		}
+		.history div:nth-of-type(2) {
+		  left:50%;
+		}
+		#save {
+		  position:absolute;
+		  top:70px;
+		  width: 100%;
+		  height: calc(100% - 70px);
+		  border: 0 solid;
+		  overflow: auto;
+		}
+		#save section {
+		  position:relative;
+		  background-color:#888;
+		  width: 100%;
+		  height:0px;
+		  padding-top:56.25%;
+		}
+		#save section iframe {
+		  position:absolute;
+		  left:0;
+		  top:0;
+		  height:100%;
+		  width: 100%;
+		}
+		.set {
+		  position:absolute;
+		  top:120px;
+		  width:100%;
+		  font-size:48px;
+		}
+		.set p {
+		  position:absolute;
+		  top:0;
+		  width: 100%;
+		  background-color: #c5a05a;
+		  text-align: center;
+		}
+		.set a {
+		  position:absolute;
+		  background-color: #fff;
+		  top:96px;
+		  width: 50%;
+		  text-align: center;
+		  border: solid;
+		}
+		.set a:nth-of-type(2) {
+		  left: 50%;
+		}
+		#fullscreen {
+		  position:absolute;
+		  top:0;
+		  left:0;
+		  width:100%;
+		  height:100%;
+		  background-color: #000;
+		}
+	</style>
+	<script>
+		function start() {
+		  document.getElementById("save").innerHTML = localStorage.getItem('hksn_save')
+		}
+		let option_if = 0;
+		function menu() {
+			option_if++;
+			if( option_if % 2== 0) {
+				document.getElementById("option").style.left ="100%";
+			}else{
+				document.getElementById("option").style.left ="0";
+			}
+		}
+		function save_clear() {
+		  let clear = confirm('本当に削除しますか？');
+		  if(clear) {
+		    document.getElementById("save").innerHTML=''
+		    localStorage.setItem('hksn_save','')
+		  }
+		}
+		function search() {
+		  let urls = url.value;
+		  if(urls.match(/youtu/)){
+		    document.getElementById("result").innerHTML='<iframe src="https://www.youtube.com/embed/'+urls.replace(/watch\?v=|&feature=emb_rel_pause|&feature=emb_rel_end/g,'').split('/')[3]+'" allowfullscreen></iframe>';
+		    document.getElementById("save").innerHTML+='<section><iframe src="https://www.youtube.com/embed/'+urls.replace(/watch\?v=|&feature=emb_rel_pause|&feature=emb_rel_end/g,'').split('/')[3]+'" allowfullscreen></iframe></section>';
+		  }
+		  localStorage.setItem('hksn_save',document.getElementById("save").innerHTML)
+		  return false;
+		}
+		const xhr = new XMLHttpRequest();
+		let title;
+		function getTitle(url){
+		  xhr.onload = function() {
+		    title=this.responseXML.title||"no title"
+		    console.log(title)
+		  }
+		  xhr.open("GET", url ,true);
+		  xhr.responseType="document";
+		  xhr.send();
+		}
+		getTitle("")
+	</script>
+</head>
+<body onload="start()">
+  <div id="fullscreen"></div>
+	<div class="menu" onclick="menu()">
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+	<div id="option">
+		<p class="title">迫真動画視聴4.0.0</p>
+		<div class="set">
+		  <p>迫真設定</p>
+		  <a id="set_lightweight">近日公開</a>
+		  <a id="set_powersaving">近日公開</a>
+		</div>
+	</div>
+	<form onsubmit="return search()" autocomplete="off">
+	   <input type="url" id="url" placeholder="URLを入力" onfocus="this.select();">
+	</form>
+	<div id="result"></div>
+	<div class="history">
+	  <div>
+	    <a onclick="save_clear()">履歴削除</a>
+	    <div id="save"></div>
+	  </div>
+	  <div>
+	    <a>近日公開</a>
+	  </div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.cells.min.js"></script>
+	<script>
+	  var setVanta = ()=>{
+	    VANTA.CELLS({
+	      el: "#fullscreen",
+	      mouseControls: true,
+	      touchControls: true,
+	      gyroControls: false,
+	      minHeight: 200.00,
+	      minWidth: 200.00,
+	      scale: 1.00,
+	      color1: 0x3ed9d9,
+	      color2: 0x35e6f2,
+	      size: 1.60,
+	      speed: 2.10
+	    })
+	  }
+	  setVanta()
+	</script>
+</body>
+</html>
